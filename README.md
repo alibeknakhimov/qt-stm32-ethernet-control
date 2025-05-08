@@ -1,6 +1,6 @@
 # Qt5 GUI → STM32 (Bare Metal) via Ethernet
 
-This project demonstrates how a Qt5 application running on a **single-board computer** controls a **bare-metal STM32** microcontroller over Ethernet using a simple TCP protocol.
+This project demonstrates how a Qt5 application running on a **single-board computer** controls a **bare-metal STM32** microcontroller over Ethernet using TCP protocol.
 
 [![Watch the demo](docs/thumbnail.png)](https://youtube.com/shorts/BL4TQFjsRmY?si=G8JpCt_BM3iExTb5)
 📺 **Click the image above to watch the video demo**

@@ -1,0 +1,22 @@
+[Unit]
+Description=Qt App Launcher
+After=multi-user.target
+Wants=multi-user.target
+
+[Service]
+ExecStart=/home/mycontroller/kk/run_kk.sh
+WorkingDirectory=/home/mycontroller
+User=mycontroller
+Group=mycontroller
+Environment=QT_QPA_PLATFORM=eglfs
+Environment=QT_QPA_EGLFS_KMS_CONFIG=/home/mycontroller/eglfs.json
+Restart=on-failure
+StandardOutput=journal
+StandardError=journal
+StandardInput=tty
+TTYPath=/dev/tty7
+TTYReset=yes
+TTYVHangup=yes
+
+[Install]
+WantedBy=multi-user.target

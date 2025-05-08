@@ -1,0 +1,26 @@
+# Qt project files
+*.user
+*.pro.user*
+*.autosave
+build/
+*.o
+*.obj
+*.moc
+*.qrc
+*.bak
+
+# STM32 generated files
+*.elf
+*.bin
+*.hex
+*.map
+*.lst
+*.log
+*.d
+*.dep
+
+# General
+.DS_Store
+*.swp
+*.swo
+*.tmp

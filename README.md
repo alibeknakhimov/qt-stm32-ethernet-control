@@ -32,5 +32,8 @@ This project demonstrates how a Qt5 application running on a **single-board comp
 ### ▶️ Qt App (on SBC)
 ```bash
 cd qt_app
-cmake.. && make
+mkdir build
+cd build
+cmake.. 
+make
 ./yourapp -platform eglfs

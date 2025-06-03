@@ -1,130 +1,90 @@
 
-# Qt5 GUI → STM32 (Bare Metal) via Ethernet
+# Qt5 GUI → STM32 (Bare Metal) via Ethernet (CH9121)
 
-This project demonstrates a full-stack embedded control system where a **Qt5 GUI application**, running on a **Raspberry Pi 5**, communicates with a **bare-metal STM32F103C8T6** microcontroller via **Ethernet** using a **CH9121** UART-to-Ethernet bridge. The system enables real-time relay control using a custom UTF-8 command protocol.
+This project demonstrates how a **Qt5 application running on Raspberry Pi 5** controls a **bare-metal STM32F103** microcontroller over Ethernet (via CH9121 ETH2UART chip), using a **custom TCP-based protocol**. The setup enables **real-time relay control** through a touchscreen GUI without relying on X11 or Wayland.
 
-[![Watch the demo](docs/thumbnail.png)](https://youtube.com/shorts/BL4TQFjsRmY?si=G8JpCt_BM3iExTb5)  
-📺 **Click the image above to watch the video demo**
+![GUI Screenshot](docs/gui.png)
+
+[![Watch the demo](docs/thumbnail.png)](https://youtube.com/shorts/BL4TQFjsRmY?si=G8JpCt_BM3iExTb5)
 
 ---
 
 ## 🔧 Features
 
-- 💻 Qt5 GUI in **fullscreen EGLFS mode** (no X11, no Wayland)
-- 🧠 STM32 firmware written **bare-metal** (no HAL, no RTOS)
-- 📡 Ethernet communication via **CH9121** (UART-to-Ethernet bridge)
-- 🔁 Real-time **relay control** via TCP
-- 📜 UTF-8 based string protocol, parsed on STM32
-- 🛠 Auto-start with `systemd` + splash screen
-- 🧰 100% self-built project (code, configs, integration)
+- 🧠 Full-stack embedded setup: from Qt GUI to STM32 firmware
+- ⚡ Real-time control of relay modules via TCP commands
+- 🔌 CH9121 ETH2UART bridge used for STM32 Ethernet connectivity
+- 🖥 GUI rendered with **Qt5 EGLFS** — no X11/Wayland
+- 🛠 STM32 runs **bare-metal C** (no HAL, no RTOS)
+- 📡 UTF-8 command parsing on STM32 side
+- 🔁 CH9121 configured via UART (initial config firmware before main logic)
+- 🐧 Autostart via `systemd` with splashscreen and shell script
 
 ---
 
-## 🗂 Project Structure
+## 📦 Hardware Used
 
-| Folder            | Description                                  |
-|-------------------|----------------------------------------------|
-| `qt_app/`         | Qt5 GUI app that sends TCP commands          |
-| `stm32_firmware/` | STM32 C code, UART config + main logic       |
-| `system/`         | Linux service setup: splash, autostart       |
-| `docs/`           | Diagrams, screenshots, thumbnails            |
+- Raspberry Pi 5 (Qt5 GUI host)
+- STM32F103C8T6 (Blue Pill)
+- CH9121 (ETH2UART bridge)
+- Relay Module (controlled by STM32)
 
 ---
 
-## 📷 GUI Screenshot
+## 🗂 Folder Structure
 
-![Qt GUI Screenshot](docs/gui.png)
+| Folder            | Description                             |
+|-------------------|-----------------------------------------|
+| `qt_app/`         | Qt5 GUI application                     |
+| `stm32_firmware/` | STM32 C code for TCP + relay control    |
+| `system/`         | Linux configs: systemd, splash, scripts |
+| `docs/`           | Screenshots, diagrams, thumbnails       |
 
 ---
 
 ## 🚀 Quick Start
 
-### 💻 Qt App (on Raspberry Pi)
+### Qt GUI (on Raspberry Pi)
 ```bash
-sudo apt install qt5-default
 cd qt_app
 mkdir build && cd build
 cmake ..
 make
-./ethernet-gui -platform eglfs
+./your_app -platform eglfs
 ````
 
-### 🔌 STM32 Setup
+### STM32 (Bare Metal Firmware)
 
-1. Flash `stm32_firmware/setup_uart_config.hex`
-   *(configures CH9121 to operate as TCP client)*
-2. Flash `stm32_firmware/main_logic.hex`
-   *(parses UTF-8 strings and controls relays)*
-3. Connect CH9121 to STM32 via UART (TX/RX + GND)
+1. Upload CH9121 configuration firmware to setup ETH2UART as TCP client.
+2. Then flash the main logic firmware.
+3. Ensure CH9121 connects to the Raspberry Pi TCP server.
 
----
+### Systemd Setup
 
-## 🧭 Architecture Diagram
-
-```mermaid
-flowchart TD
-    subgraph Linux_SBC[Raspberry Pi 5]
-        GUI[Qt5 GUI App]
-        Systemd[Systemd Autostart + EGLFS]
-    end
-    subgraph Network[Ethernet LAN]
-        LAN[LAN Cable or Switch]
-    end
-    subgraph STM32_side[STM32 Hardware]
-        CH9121[CH9121 TCP↔UART Bridge]
-        STM32[STM32F103C8T6 (bare-metal)]
-        Relays[Relay Modules]
-    end
-
-    GUI -->|TCP Command| LAN --> CH9121 -->|UART| STM32 --> Relays
+```bash
+sudo cp system/*.service /etc/systemd/system/
+sudo systemctl enable splashscreen.service
+sudo systemctl enable start_gui.service
 ```
 
 ---
 
-## 🛠 Tools & Environment
+## 📡 Protocol Overview
 
-* **Platform:** Raspberry Pi 5 (64-bit Raspberry Pi OS)
-* **GUI Toolkit:** Qt5.15 (EGLFS mode)
-* **Microcontroller:** STM32F103C8T6 (Blue Pill)
-* **Network Bridge:** CH9121 UART ↔ Ethernet
-* **Compiler:** `arm-none-eabi-gcc`
-* **Flash tools:** STM32CubeProgrammer or stlink
-* **System integration:** `systemd`, Bash scripts, splash screen
+* Qt app acts as **TCP server**, listening for connections.
+* STM32 (with CH9121 as client) connects and sends messages in **UTF-8 encoded strings**.
+* STM32 parses messages and triggers relays accordingly.
 
 ---
 
-## 🎓 What I Learned
+## 📌 Author & Skills Demonstrated
 
-* How to write **bare-metal STM32 firmware** using register-level programming
-* Configuring the **CH9121 Ethernet bridge** via UART
-* Designing and parsing **simple UTF-8 command protocols**
-* Running Qt5 in **EGLFS mode** without X11 or Wayland
-* Automating GUI startup using **systemd** and splash services
-* Working with **cross-compilation**, headless SBCs, and low-level networking
+**Author**: [@alibeknakhimov](https://github.com/alibeknakhimov)
+**Roles**:
 
----
-
-## 🚧 Roadmap
-
-* [ ] Add reconnect/retry TCP logic on STM32
-* [ ] Add Qt GUI config for IP address and port
-* [ ] Package GUI as `.AppImage` for deployment
-* [ ] CI/CD pipeline for automated build/test (Qt & STM32)
-* [ ] Unit-tests for command parsing logic
-
----
-
-## 📜 License
-
-This project is released under the MIT License. See [LICENSE](LICENSE) for details.
-
----
-
-## 🙋 About the Author
-
-Everything in this project—from UI design to embedded code and system integration—was implemented from scratch by me as a demonstration of embedded systems engineering.
-Feel free to reach out or open issues if you're interested in contributing or learning more.
-
-```
-
+* STM32 bare-metal firmware development (no HAL)
+* TCP server implementation with Qt5 GUI
+* CH9121 UART-based configuration
+* Systemd-based autostart and EGLFS GUI setup without X11/Wayland
+* Splash screen and headless device initialization
 

@@ -37,3 +37,21 @@ cd build
 cmake.. 
 make
 ./yourapp -platform eglfs
+
+
+flowchart TD
+    subgraph Linux SBC (Raspberry Pi 5)
+        A[Qt5 GUI App]
+        B[Systemd Autostart + EGLFS]
+    end
+    subgraph Ethernet LAN
+        L1[LAN Switch or Direct Cable]
+    end
+    subgraph STM32 Side
+        C[CH9121 TCP↔UART]
+        D[STM32 (bare-metal)]
+        E[Relay Modules]
+    end
+
+    A -->|TCP| L1 --> C -->|UART| D --> E
+

@@ -37,8 +37,7 @@ cd build
 cmake.. 
 make
 ./yourapp -platform eglfs
-
-
+```
 flowchart TD
     subgraph Linux SBC (Raspberry Pi 5)
         A[Qt5 GUI App]

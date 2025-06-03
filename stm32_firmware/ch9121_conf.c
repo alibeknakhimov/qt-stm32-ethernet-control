@@ -1,7 +1,4 @@
 #include <stdint.h>
-#include <string.h>
-#include <stdbool.h>
-#include <stdlib.h>
 #define RCC_APB2ENR     (*(volatile uint32_t*)(0x40021000UL + 0x18UL))
 #define GPIOA_CRH       (*(volatile uint32_t*)(0x40010800UL + 0x04UL))
 #define GPIOA_ODR       (*(volatile uint32_t*)(0x40010800UL + 0x0CUL))
@@ -9,14 +6,11 @@
 #define USART_DR        (*(volatile uint32_t*)(0x40013800UL + 0x04UL))
 #define USART_BRR       (*(volatile uint32_t*)(0x40013800UL + 0x08UL))
 #define USART_CR1       (*(volatile uint32_t*)(0x40013800UL + 0x0CUL))
-#define GPIOB_CRH       (*(volatile uint32_t*)(0x40011000UL + 0x04UL))
-#define GPIOB_ODR       (*(volatile uint32_t*)(0x40011000UL + 0x0CUL))
-bool gh = true;
+
 void gpioa_init(void);
-void gpiob_init(void);
 void uart_init(void);
 void uart_send(uint8_t data);
-char* uart_receive_string(void);
+uint8_t uart_receive(void);
 void delay(void);
 
 void mode(uint8_t mode);
@@ -31,49 +25,33 @@ void safechanges();
 
 
 int main(){
-    gpiob_init();
     gpioa_init();
     uart_init();
     GPIOA_ODR |= (1<<11);     //rst
-    GPIOA_ODR |= (1<<12);    //cfg
-    char received_string[10] = "";
-    while (1) {
-        strcpy(received_string, uart_receive_string());
-        char* div = strchr(received_string, ':');
-        *div = '\0';
-        uint8_t value = atoi(div+1);
-        if (strcmp(received_string, "B2") == 0 && value == 1) {
-            GPIOB_ODR &= ~(1 << 13);       
-        }
-        if (strcmp(received_string, "B2") == 0 && value == 0) {
-            GPIOB_ODR |= (1 << 13);       
-        }
-    }
-    
-    
+    GPIOA_ODR &= ~(1<<12);    //cfg
+    mode(0);
+    delay();
+    localip(192, 168, 0, 92);
+    delay();
+    submask(255, 255, 255, 0);
+    delay();
+    gateway(192, 168, 0, 1);
+    delay();
+    localport(2000);
+    delay();
+    destinationip(192, 168, 0, 203);
+    delay();
+    destinationport(1880);
+    delay();
+    baudrate(9600);
+    delay();
+    safechanges();
+    GPIOA_ODR |= (1<<12); 
 }
-
-char uart_receive(){
+uint8_t uart_receive(){
     while(!(USART_SR & (1<<5)));
     return USART_DR;
 }
-
-char* uart_receive_string() {
-    static char buffer[100]; 
-    int i = 0;  
-
-    while (i < sizeof(buffer) - 1) {
-        char c = uart_receive();
-        buffer[i] = c;  
-        if (c == '\n' || c == '\r') break;  
-        i++;  
-    } 
-
-    buffer[i] = '\0';  
-    return buffer; 
-}
-
-
 void gpioa_init(){
     RCC_APB2ENR |= (1 << 2) | (1 << 14);
     GPIOA_CRH &= ~(15 << 4);
@@ -183,10 +161,4 @@ void safechanges(){
 
 void delay(){
     for(volatile int i = 0; i<=10000; i++);
-}
-void gpiob_init(void){
-    RCC_APB2ENR |= (1 << 3);
-
-    GPIOB_CRH &= ~(15 << 20);
-    GPIOB_CRH |= (1 << 20);
 }

@@ -62,10 +62,13 @@ make
 ### Systemd Setup
 
 ```bash
-sudo cp system/*.service /etc/systemd/system/
+sudo cp system/myqtapp.service /etc/systemd/system/
+chmod +x system/runqt.sh
+sudo systemctl daemon-reload
+sudo systemctl enable myqtapp.service
 sudo systemctl enable splashscreen.service
-sudo systemctl enable start_gui.service
 ```
+
 
 ---
 

@@ -5,9 +5,10 @@ This project demonstrates how a **Qt5 application running on Raspberry Pi 5** co
 
 ![GUI Screenshot](docs/gui.png)
 
-[![▶️ Watch Demo on YouTube](docs/thumbnail.png)](https://youtube.com/shorts/BL4TQFjsRmY?si=G8JpCt_BM3iExTb5)
+[![▶️ Watch Demo](docs/thumbnail.png)](https://youtube.com/shorts/BL4TQFjsRmY?si=G8JpCt_BM3iExTb5)
 
-*(Click the image to open YouTube video demo.)*
+**▶️ [Watch Demo on YouTube](https://youtube.com/shorts/BL4TQFjsRmY?si=G8JpCt_BM3iExTb5)**  
+*(Click the image above to open video demo.)*
 
 ---
 

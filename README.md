@@ -4,10 +4,10 @@
 This project demonstrates how a **Qt5 application running on Raspberry Pi 5** controls a **bare-metal STM32F103** microcontroller over Ethernet (via CH9121 ETH2UART chip), using a **custom TCP-based protocol**. The setup enables **real-time relay control** through a touchscreen GUI without relying on X11 or Wayland.
 
 ### 🖼 GUI Screenshot
-![GUI Screenshot](docs/gui.png)
+![GUI Screenshot](media/gui.png)
 
 ### ▶️ Video Demo
-[![▶️ Watch Demo](docs/thumbnail.png)](https://youtube.com/shorts/BL4TQFjsRmY?si=G8JpCt_BM3iExTb5)
+[![▶️ Watch Demo](media/thumbnail.png)](https://youtube.com/shorts/BL4TQFjsRmY?si=G8JpCt_BM3iExTb5)
 
 **▶️ [Watch Demo on YouTube](https://youtube.com/shorts/BL4TQFjsRmY?si=G8JpCt_BM3iExTb5)**  
 *(Click the image above to open video demo.)*
